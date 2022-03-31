@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SplashShoppingCart.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace SplashShoppingCart.Infrastructure
             : base(options)
         {
         }
+        public DbSet<Page> Pages { get; set; }
     }
 }
