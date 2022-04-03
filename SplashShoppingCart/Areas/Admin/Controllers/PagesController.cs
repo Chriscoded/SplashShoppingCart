@@ -36,10 +36,10 @@ namespace SplashShoppingCart.Areas.Admin.Controllers
             return View(page);
         }
 
-        //Get /admin/pages/create
+        //GET /admin/pages/create
         public async Task<IActionResult> Create() => View();
 
-        //Post /admin/pages/create
+        //POST /admin/pages/create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Page page)
