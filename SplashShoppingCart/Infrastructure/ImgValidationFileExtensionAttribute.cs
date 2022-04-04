@@ -32,13 +32,13 @@ namespace SplashShoppingCart.Infrastructure
                 return ValidationResult.Success;
             }
             //return ValidationResult.Success;
-            return new ValidationResult(GetErrorMessage2());
+            return ValidationResult.Success;
 
         }
-        private string GetErrorMessage2()
-        {
-            return "Please upload an Image";
-        }
+        //private string GetErrorMessage2()
+        //{
+        //    return "Please upload an Image";
+        //}
         private string GetErrorMessage()
         {
             return "Allowed extensions are jpg and png.";

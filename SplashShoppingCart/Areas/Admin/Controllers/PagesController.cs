@@ -25,7 +25,7 @@ namespace SplashShoppingCart.Areas.Admin.Controllers
             IList<Page> pagesList = await pages.ToListAsync();
             return View(pagesList);
         }       
-        //Get /admin/pages/details/id
+        //GET /admin/pages/details/id
         public async Task<IActionResult> Details(int id)
         {
             Page page = await context.Pages.FirstOrDefaultAsync(x => x.Id == id);
