@@ -52,6 +52,13 @@ namespace SplashShoppingCart
 
             app.UseEndpoints(endpoints =>
             {
+            endpoints.MapControllerRoute(
+                    //route name
+                    "pages",
+                    //route
+                    "{slug?}",
+                    defaults: new { controller = "Pages", action = "Page"}
+            );
                 endpoints.MapControllerRoute(
                    name: "areas",
                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
