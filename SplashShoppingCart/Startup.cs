@@ -52,20 +52,40 @@ namespace SplashShoppingCart
 
             app.UseEndpoints(endpoints =>
             {
-            endpoints.MapControllerRoute(
-                    //route name
-                    "pages",
+
+                endpoints.MapControllerRoute(
+                    //controller name
+                    "productscategory",
                     //route
-                    "{slug?}",
-                    defaults: new { controller = "Pages", action = "Page"}
-            );
+                    "products/{categoryslug}",
+                    defaults: new { controller = "Products", action = "ProductsByCategory" }
+                    );
+
+                endpoints.MapControllerRoute(
+                   name: "products",
+                   pattern: "{controller=Products}/{action=Index}"
+                 );
+
+
+                endpoints.MapControllerRoute(
+                   //controller name
+                   "pages",
+                   //route
+                   "{slug?}",
+                   defaults: new { controller = "Pages", action = "Page" }
+           );
+
                 endpoints.MapControllerRoute(
                    name: "areas",
                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                  );
+
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                   name: "home",
+                   pattern: "{controller=Home}/{action=Index}/{id?}"
+                   );
+
+
             });
         }
     }
