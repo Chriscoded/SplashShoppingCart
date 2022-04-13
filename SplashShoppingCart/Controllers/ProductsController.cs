@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SplashShoppingCart.Infrastructure;
 using SplashShoppingCart.Models;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SplashShoppingCart.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly SplashShoppingCartContext context;

@@ -17,9 +17,34 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @*flex-sm-row-reverse*@
                     <ul class="navbar-nav flex-grow-1">
                         @*Invoking MainMenu view component*@
                         @await Component.InvokeAsync("MainMenu")
+
+                    </ul>
+
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        @*check if user is logged in if not assign it false*@
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Edit" class="btn btn-primary">My Account</a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Logout" class="btn btn-danger ml-1">Hi, @User.Identity.Name, Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-success">Login</a>
+                            </li>
+                            <li class="nav-item ml-1">
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Register</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -27,10 +52,15 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_NotificationPartial"/>
             @*Invoking Categories view component*@
             <div class="row">
                 <div class="col-3">
                     @await Component.InvokeAsync("Categories")
+
+                    <div class="smallCart bg-success mt-3 p-3 text-white">
+                        @await Component.InvokeAsync("SmallCart")
+                    </div>
                 </div>
                 <div class="col">
                     @RenderBody()

@@ -6,6 +6,20 @@
         });
     }
 
+    //confirm notification by selecting yes in js alert (for removal)
+    if ($("a.confirmRemoval").length) {
+        $("a.confirmRemoval").click(() => {
+            if (!confirm("confirm Item Removal")) return false;
+        });
+    }
+
+    //confirm notification by selecting yes in js alert (for clearAll)
+    if ($("a.clearAll").length) {
+        $("a.clearAll").click(() => {
+            if (!confirm("Are you sure you want to clear all items from cart ?")) return false;
+        });
+    }
+
     //Change the time for display of success or error Temp messages
     if ($("div.alert.notification").length) {
         setTimeout(() => {

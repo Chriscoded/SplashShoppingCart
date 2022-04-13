@@ -1,0 +1,80 @@
+﻿@model SplashShoppingCart.Models.CartViewModel
+
+@{
+    ViewData["Title"] = "Cart Overview";
+}
+
+@if (Model.CartItems.Count > 0)
+{
+    <h1>Cart Overview</h1>
+    <div class="cartWrapper">
+        <div class="cartbg d-none">
+            <h3 class="text-center"> Redirecting you to paystack...</h3>
+            <img src="~/Images/ajax-loader.gif" />
+        </div>
+        <table class="table">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th></th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Image</th>
+            </tr>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        <a asp-action="Add" asp-route-id="@item.ProductId" class="btn btn-sm btn-primary">+</a>
+                        <a asp-action="Decrease" asp-route-id="@item.ProductId" class="btn btn-sm btn-success">-</a>
+                        <a asp-action="Remove" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger confirmRemoval">x</a>
+                    </td>
+                    <td>@item.Price.ToString("C2")</td>
+                    <td>@item.Total.ToString("C2")</td>
+                    <td> <img src="~/media/products/@item.Image" width="40" height="40" alt="image loading..." /> </td>
+                </tr>
+
+            }
+            <tr>
+                <td class="text-right" colspan="5">
+                    Grand Total: @Model.GrandTotal.ToString("C2")
+                </td>
+            </tr>
+            <tr>
+                <td class="text-right" colspan="5">
+                    <a asp-action="Clear" class="btn btn-danger clearAll">Clear Cart</a>
+                    <a href="#" class="btn btn-primary checkout">Checkout</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <h3 class="display-4 text-center" colspan="4"> Your cart is empty.</h3>
+}
+
+
+<partial name="~/Views/Cart/_PaystackPartial.cshtml" for="CartItems" />
+@*<partial name="~/Views/Cart/_PaypalPartial.cshtml" for="CartItems" />*@
+
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("a.checkout").click(function (e) {
+                e.preventDefault();
+                $("div.cartbg").removeClass("d-none");
+
+                $.get("/cart/clear", {}, function () {
+                    $("form.paystackform").submit();
+                });
+            });
+        });
+    </script>
+}
+
+
+
