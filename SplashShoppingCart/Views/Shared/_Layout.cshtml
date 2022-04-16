@@ -34,6 +34,12 @@
                             <li class="nav-item">
                                 <a asp-controller="Account" asp-action="Logout" class="btn btn-danger ml-1">Hi, @User.Identity.Name, Logout</a>
                             </li>
+                            @if(User.IsInRole("Admin") || User.IsInRole("Editor"))
+                            {
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Pages" asp-action="Index" class="btn btn-success ml-1">Admin Area</a>
+                                </li>
+                            }
                         }
                         else
                         {

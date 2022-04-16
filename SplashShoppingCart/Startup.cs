@@ -33,6 +33,8 @@ namespace SplashShoppingCart
                 //options.IdleTimeout = TimeSpan.FromHours(2);
                 //options.IdleTimeout = TimeSpan.FromDays(2);
             });
+
+            services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllersWithViews();
             services.AddDbContext<SplashShoppingCartContext>(options => options.UseSqlServer
             (Configuration.GetConnectionString("SplashShoppingCartDbConnection")));
