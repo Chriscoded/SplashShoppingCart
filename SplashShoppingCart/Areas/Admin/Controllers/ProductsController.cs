@@ -198,5 +198,15 @@ namespace SplashShoppingCart.Areas.Admin.Controllers
             }
             return RedirectToAction("index");
         }
+
+        //GET /admin/products/transactions
+        public IActionResult Transactions()
+        {
+
+            var transactions = context.Transactions.Where(x => x.Status == true).ToList();
+            ViewData["transactions"] = transactions;
+            return View();
+           
+        }
     }
 }

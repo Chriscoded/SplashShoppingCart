@@ -5,16 +5,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using PayStack.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace SplashShoppingCart.Controllers
 {
     public class CartController : Controller
     {
         private readonly SplashShoppingCartContext context;
+        private readonly IConfiguration configuration;
+        private readonly UserManager<AppUser> userManager;
+        private readonly string token;
+        private PayStackApi Paystack;
 
-        public CartController(SplashShoppingCartContext Context)
+        public CartController(SplashShoppingCartContext Context, IConfiguration configuration, UserManager<AppUser> userManager)
         {
             context = Context;
+            this.configuration = configuration;
+            this.userManager = userManager;
+            token = configuration["Payment:PaystackSK"];
+            Paystack = new PayStackApi(token);
+
         }
         //GET //cart
         public IActionResult Index()
@@ -124,6 +136,67 @@ namespace SplashShoppingCart.Controllers
                 return Redirect(Request.Headers["Referer"].ToString());
 
             return Ok();
+        }
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task <IActionResult> InitializePayment(CartViewModel model)
+        {
+            AppUser user = await userManager.FindByNameAsync(User.Identity.Name);
+            TransactionInitializeRequest request = new TransactionInitializeRequest()
+            {
+                AmountInKobo = (int)model.GrandTotal * 100,
+                Email = user.Email,
+                Reference = Generate().ToString(),
+                Currency = "NGN",
+                CallbackUrl = "http://localhost:56032/cart/verify"
+            };
+
+            TransactionInitializeResponse response = Paystack.Transactions.Initialize(request);
+            if (response.Status)
+            {
+                var transaction = new Transaction
+                {
+                    Amount = model.GrandTotal,
+                    Email = user.Email,
+                    Name = User.Identity.Name,
+                    TrxRef = request.Reference
+                };
+
+                await context.Transactions.AddAsync(transaction);
+                await context.SaveChangesAsync();
+                //redirect to url provided by paystack
+                return Redirect(response.Data.AuthorizationUrl);
+            }
+            ViewData["PaystackError"] = response.Message;
+            return RedirectToAction("Index");
+        }
+
+        public static int Generate()
+        {
+            Random rand = new Random((int)DateTime.Now.Ticks);
+            //min val max = 100000000 max = 999999999
+            return rand.Next(100000000, 999999999);
+        }
+
+        public async Task<IActionResult> Verify(string reference)
+        {
+            TransactionVerifyResponse response = Paystack.Transactions.Verify(reference);
+            //if the transaction is successfull
+            if(response.Data.Status == "success")
+            {
+                //if the reference in the database is the same as the ref passed in then updat transaction.status = true
+                var transaction = context.Transactions.Where(x => x.TrxRef == reference).FirstOrDefault();
+                if(transaction != null)
+                {
+                    transaction.Status = true;
+                    context.Transactions.Update(transaction);
+                    await context.SaveChangesAsync();
+
+                    return RedirectToAction("Index");
+                }
+            }
+            ViewData["Paystack-error"] = response.Data.GatewayResponse;
+            return RedirectToAction("Index");
         }
     }
 }

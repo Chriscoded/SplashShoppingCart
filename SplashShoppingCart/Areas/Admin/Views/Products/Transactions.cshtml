@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SplashShoppingCart.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Transactions";
+    var transactions = ViewData["transactions"] as List<Transaction>;
+}
+
+<h1>Transactions</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Transaction ref
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var transaction in transactions) {
+        <tr>
+            <td>
+                @transaction.Name
+            </td>
+            <td>
+                @transaction.Email
+            </td>
+            <td>
+                @transaction.Amount
+            </td>
+            <td>
+                @transaction.TrxRef
+            </td>
+
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+        </tr>
+}
+    </tbody>
+</table>

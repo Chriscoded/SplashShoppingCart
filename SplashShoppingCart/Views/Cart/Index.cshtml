@@ -2,11 +2,16 @@
 
 @{
     ViewData["Title"] = "Cart Overview";
+    var error = ViewData["PaystackError"] as string;
 }
 
 @if (Model.CartItems.Count > 0)
 {
     <h1>Cart Overview</h1>
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger text-center"> @error</div>
+    }
     <div class="cartWrapper">
         <div class="cartbg d-none">
             <h3 class="text-center"> Redirecting you to paystack...</h3>
@@ -56,12 +61,20 @@ else
     <h3 class="display-4 text-center" colspan="4"> Your cart is empty.</h3>
 }
 
+<form class="paystackform" asp-action="InitializePayment" method="post">
 
-<partial name="~/Views/Cart/_PaystackPartial.cshtml" for="CartItems" />
+
+    <input type="hidden" asp-for="GrandTotal" value="@Model.GrandTotal">
+
+    @*<button type="submit" onclick="payWithPaystack()"> Pay </button>*@
+</form>
+
+@*<partial name="~/Views/Cart/_PaystackPartial.cshtml" for="CartItems" />*@
 @*<partial name="~/Views/Cart/_PaypalPartial.cshtml" for="CartItems" />*@
 
 
 @section Scripts {
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script>
         $(function () {
             $("a.checkout").click(function (e) {
