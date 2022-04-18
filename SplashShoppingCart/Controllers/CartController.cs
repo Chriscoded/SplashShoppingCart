@@ -144,7 +144,7 @@ namespace SplashShoppingCart.Controllers
             AppUser user = await userManager.FindByNameAsync(User.Identity.Name);
             TransactionInitializeRequest request = new TransactionInitializeRequest()
             {
-                AmountInKobo = (int)model.GrandTotal * 100,
+                AmountInKobo = (int)(model.GrandTotal * 100),
                 Email = user.Email,
                 Reference = Generate().ToString(),
                 Currency = "NGN",
